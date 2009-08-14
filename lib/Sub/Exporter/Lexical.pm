@@ -3,7 +3,7 @@ use warnings;
 package Sub::Exporter::Lexical;
 
 use namespace::clean ();
-use B::Hooks::EndOfScope;
+use B::Hooks::EndOfScope ();
 
 sub lexical_installer { 
   sub { 
@@ -11,15 +11,12 @@ sub lexical_installer {
 
     my $into = $arg->{into};
 
-    my @names;
-    for (my $i = 0; $i < @$to_export; $i += 2) {
-      my ($as, $code) = @$to_export[ $i, $i+1 ];
-      next if ref $as;
-      push @names, $as;
-    }
- 
+    my @names =
+      map { $to_export->[ $_ ] }
+      grep { not($_ % 2) and ! ref $to_export->[$_] } (0 .. $#$to_export);
+
     Sub::Exporter::default_installer($arg, $to_export); 
-    on_scope_end {
+    B::Hooks::EndOfScope::on_scope_end {
       namespace::clean->clean_subroutines($arg->{into}, @names);
     };
   }; 
