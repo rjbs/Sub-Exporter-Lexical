@@ -74,7 +74,7 @@ For the second:
 
 =head1 EXPORTS
 
-Sub::Exporter::ForMethods offers only one routine for export, and it may also
+Sub::Exporter::Lexical offers only one routine for export, and it may also
 be called by its full package name:
 
 =head2 lexical_installer
