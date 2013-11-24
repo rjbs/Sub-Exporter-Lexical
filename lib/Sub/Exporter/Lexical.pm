@@ -3,15 +3,21 @@ use warnings;
 package Sub::Exporter::Lexical;
 # ABSTRACT: to export lexically-available subs with Sub::Exporter
 
-use namespace::clean ();
-use B::Hooks::EndOfScope ();
+use v5.12.0;
+
+use Lexical::Sub ();
 
 use Sub::Exporter -setup => {
   exports => [ qw(lexical_installer) ],
 };
 
-
 =head1 SYNOPSIS
+
+B<Achtung!>  I don't know why I wrote this.  I don't use it and never have.
+Originally, it was not lexical, but dynamic, despite the name.  What was I
+thinking?  Clearly this was a bad brain day.  I have rewritten the code now to
+use L<Lexical::Sub>, which should make the behavior actually lexical, but I
+have not expanded the test suite.  To continue...
 
 In an exporting library:
 
@@ -35,7 +41,7 @@ In an importing library:
 
   {
     use Some:::Toolkit { installer => lex }, qw(foo bar);
-    
+
     foo(1,2,3);
     my $x = bar;
 
@@ -107,11 +113,13 @@ works:
 
   foo(); # this does not die, even though you might expect it to
 
+Finally, you can't supply a C<< -as => \$var >> install destination yet.
+
 =cut
 
-sub lexical_installer { 
-  sub { 
-    my ($arg, $to_export) = @_; 
+sub lexical_installer {
+  sub {
+    my ($arg, $to_export) = @_;
 
     my $into = $arg->{into};
 
@@ -119,11 +127,16 @@ sub lexical_installer {
       map { $to_export->[ $_ ] }
       grep { not($_ % 2) and ! ref $to_export->[$_] } (0 .. $#$to_export);
 
-    Sub::Exporter::default_installer($arg, $to_export); 
-    B::Hooks::EndOfScope::on_scope_end {
-      namespace::clean->clean_subroutines($arg->{into}, @names);
-    };
-  }; 
-} 
+    my @pairs = @$to_export;
+    while (my ($name, $code) = splice @pairs, 0, 2) {
+      if (ref $name) {
+        # We could implement this easily, but haven't. -- rjbs, 2013-11-24
+        Carp::cluck("can't import to variable with lexical installer (yet)");
+        next;
+      }
+      Lexical::Sub->import($name, $code);
+    }
+  };
+}
 
 1;

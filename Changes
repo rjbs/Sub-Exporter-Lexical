@@ -1,6 +1,8 @@
 Revision history for {{$dist-name}}
 
 {{$NEXT}}
+        - switch guts to Lexical:::Sub
+        - update bugtracker and repo URLs
 
 0.092291  2011-10-15 18:18:35 Asia/Tokyo
           repackage to add META.yml
