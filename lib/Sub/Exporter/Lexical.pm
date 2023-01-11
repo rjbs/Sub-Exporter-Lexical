@@ -1,23 +1,23 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Sub::Exporter::Lexical;
 # ABSTRACT: to export lexically-available subs with Sub::Exporter
 
-use v5.12.0;
+BEGIN {
+  if ($] >= 5.021 && $] < 5.037002) {
+    use Carp ();
+    Carp::confess("There is no functioning lexical exporter between perl v5.20 and v5.38");
+  }
+}
 
-use Lexical::Sub ();
+use if $] < 5.021, 'Lexical::Sub';
+use if $] >= 5.037002, 'builtin';
 
 use Sub::Exporter -setup => {
   exports => [ qw(lexical_installer) ],
 };
 
 =head1 SYNOPSIS
-
-B<Achtung!>  I don't know why I wrote this.  I don't use it and never have.
-Originally, it was not lexical, but dynamic, despite the name.  What was I
-thinking?  Clearly this was a bad brain day.  I have rewritten the code now to
-use L<Lexical::Sub>, which should make the behavior actually lexical, but I
-have not expanded the test suite.  To continue...
 
 In an exporting library:
 
@@ -134,7 +134,10 @@ sub lexical_installer {
         Carp::cluck("can't import to variable with lexical installer (yet)");
         next;
       }
-      Lexical::Sub->import($name, $code);
+
+      if ($] >= 5.037002) { builtin::export_lexically($name, $code); }
+      elsif ($] <= 5.021) { Lexical::Sub->import($name, $code); }
+      else { Carp::confess("This code should be unreachable.") }
     }
   };
 }
