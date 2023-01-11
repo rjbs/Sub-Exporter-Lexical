@@ -68,7 +68,7 @@ jobs:
         run: tar zxvf Dist-To-Test.tar.gz
       - name: Install dependencies
         working-directory: ./Dist-To-Test
-        run: cpanm --installdeps --notest .
+        run: cpanm --installdeps --notest --verbose .
       - name: Makefile.PL
         working-directory: ./Dist-To-Test
         run: perl Makefile.PL
