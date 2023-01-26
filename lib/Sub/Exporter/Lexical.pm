@@ -3,8 +3,12 @@ use warnings;
 package Sub::Exporter::Lexical;
 # ABSTRACT: to export lexically-available subs with Sub::Exporter
 
-use if $] <  5.037002, 'Lexical::Sub';
-use if $] >= 5.037002, 'builtin';
+# I know about if.pm!  But we can't use it here because "use Lexical::Sub" will
+# call import and then it dies "does no default importation".
+BEGIN {
+  if ($] <  5.037002) { require Lexical::Sub; }
+  else                { require builtin;      }
+}
 
 use Sub::Exporter -setup => {
   exports => [ qw(lexical_installer) ],
