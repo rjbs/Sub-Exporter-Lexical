@@ -3,14 +3,7 @@ use warnings;
 package Sub::Exporter::Lexical;
 # ABSTRACT: to export lexically-available subs with Sub::Exporter
 
-BEGIN {
-  if ($] >= 5.021 && $] < 5.037002) {
-    use Carp ();
-    Carp::confess("There is no functioning lexical exporter between perl v5.20 and v5.38");
-  }
-}
-
-use if $] < 5.021, 'Lexical::Sub';
+use if $] <  5.037002, 'Lexical::Sub';
 use if $] >= 5.037002, 'builtin';
 
 use Sub::Exporter -setup => {
@@ -136,8 +129,7 @@ sub lexical_installer {
       }
 
       if ($] >= 5.037002) { builtin::export_lexically($name, $code); }
-      elsif ($] <= 5.021) { Lexical::Sub->import($name, $code); }
-      else { Carp::confess("This code should be unreachable.") }
+      else                { Lexical::Sub->import($name, $code); }
     }
   };
 }
