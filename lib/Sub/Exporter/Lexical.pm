@@ -4,9 +4,12 @@ package Sub::Exporter::Lexical;
 # ABSTRACT: to export lexically-available subs with Sub::Exporter
 
 # I know about if.pm!  But we can't use it here because "use Lexical::Sub" will
-# call import and then it dies "does no default importation".
+# call import and then it dies "does no default importation".  And then what
+# about this *utterly ridiculous* require?  Well, that's to avoid the prereq
+# scanner picking up Lexical::Sub, which I do not want to just RemovePrereqs
+# on, because that runs after the thing that adds optional prereqs.
 BEGIN {
-  if ($] <  5.037002) { require Lexical::Sub; }
+  if ($] <  5.037002) { eval "require Lexical::Sub;" || die $@ }
   else                { require builtin;      }
 }
 
