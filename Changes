@@ -1,6 +1,10 @@
 Revision history for {{$dist-name}}
 
 {{$NEXT}}
+        - This version should work on v5.22+ but ONLY if you have a working
+          Lexical::Sub installed (or are on v5.37.2 or later).  I am hoping a
+          new version of Lexical::Var will be on the CPAN soon, making this
+          practical!
 
 0.100000  2023-01-10 21:58:54-05:00 America/New_York
         - switch guts to builtin::export_lexically
