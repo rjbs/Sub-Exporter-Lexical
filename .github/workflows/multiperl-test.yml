@@ -44,8 +44,6 @@ jobs:
   multiperl-test:
     needs: build-tarball
     env:
-      # some plugins still needs this to run their tests...
-      PERL_USE_UNSAFE_INC: 0
       AUTHOR_TESTING: 1
       AUTOMATED_TESTING: 1
 
@@ -77,7 +75,7 @@ jobs:
 
     steps:
       - name: Install Leon's build of Lexical::Var
-        run: "cpanm --notest https://semiotic.systems/Lexical-Var-0.010.tar.gz || (cat ~/.cpanm/build.log && false)"
+        run: "cpanm https://semiotic.systems/Lexical-Var-0.010.tar.gz || (cat ~/.cpanm/build.log && false)"
       - name: Download tarball
         uses: actions/download-artifact@v3
         with:
