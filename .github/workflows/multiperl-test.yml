@@ -72,8 +72,6 @@ jobs:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
 
     steps:
-      - name: Install Leon's build of Lexical::Var
-        run: "cpanm https://semiotic.systems/Lexical-Var-0.010.tar.gz || (cat ~/.cpanm/build.log && false)"
       - name: Download tarball
         uses: actions/download-artifact@v3
         with:
