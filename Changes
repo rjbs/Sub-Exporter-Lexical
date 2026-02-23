@@ -1,6 +1,7 @@
 Revision history for {{$dist-name}}
 
 {{$NEXT}}
+        - remove an unused variable that was using CPU for no reason
 
 1.000     2023-03-24 11:17:23-04:00 America/New_York
         - This version should work on v5.12+ but ONLY if you have a working

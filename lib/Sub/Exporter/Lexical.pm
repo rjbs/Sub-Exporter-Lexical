@@ -123,10 +123,6 @@ sub lexical_installer {
 
     my $into = $arg->{into};
 
-    my @names =
-      map { $to_export->[ $_ ] }
-      grep { not($_ % 2) and ! ref $to_export->[$_] } (0 .. $#$to_export);
-
     my @pairs = @$to_export;
     while (my ($name, $code) = splice @pairs, 0, 2) {
       if (ref $name) {
