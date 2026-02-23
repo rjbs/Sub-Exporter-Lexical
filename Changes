@@ -1,6 +1,8 @@
 Revision history for {{$dist-name}}
 
 {{$NEXT}}
+
+1.001     2026-02-22 21:38:54-05:00 America/New_York
         - remove an unused variable that was using CPU for no reason
 
 1.000     2023-03-24 11:17:23-04:00 America/New_York
